@@ -18,14 +18,27 @@ app.get('/', (req,res) =>{
     res.render('index.ejs');
 });
 
-const menuItemsRouter = require('./routes/menuItems');
-app.use('/menu-items', menuItemsRouter);
+const registrationRouter = require('./routes/registration.js');
+app.use('/registration', registrationRouter);
+
+const managementRouter = require('./routes/management.js');
+app.use('/management', managementRouter);
+
+const customerHomeRouter = require('./routes/customer/home.js');
+app.use('/home', customerHomeRouter);
+
+const customerMenuItemsRouter = require('./routes/customer/menuItems.js');
+app.use('/menu-items', customerMenuItemsRouter);
+
+const customerLogoutRouter = require('./routes/customer/logout.js');
+app.use('/logout', customerLogoutRouter);
 
 const loginRouter = require('./routes/login');
 app.use('/login', loginRouter);
 
 const apiMenuItemsRouter = require('./routes/api/apiMenuItems');
 app.use('/api/menu-items', apiMenuItemsRouter);
+
 
 app.use((req, res) => {
     res.status(404).render('404');
