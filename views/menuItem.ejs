@@ -1,0 +1,19 @@
+<html lang="en">
+    <%- include('./partials/head.ejs') %>
+    <%- include('./partials/header.ejs') %>
+    <body>
+        <div class="single-item">
+            <h3>Menu Item:</h3>
+            <a href="/login/menu-items"><button id = "return">Return</button></a>
+            <% if (menuItem.length > 0) 
+                var menuItem = menuItem[0];{ %>
+                <p><Strong>Name:</Strong> <%=menuItem.name %></p> 
+                <p><Strong>Description:</Strong> <%= menuItem.description %></p>
+                <p><Strong>Price:</Strong> $<%= menuItem.price %></p>
+                <p><Strong>Category:</Strong> <%= menuItem.category %></p>
+                <p><Strong>Image_url:</Strong> <%= menuItem.image_url %></p>
+            <% } %>
+        </div>
+    </body>
+    <%- include('./partials/footer.ejs') %>
+</html>

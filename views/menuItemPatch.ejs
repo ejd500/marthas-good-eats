@@ -1,0 +1,37 @@
+<html lang="en">
+    <%- include('./partials/head.ejs') %>
+    <%- include('./partials/header.ejs') %>     
+
+    <body>
+        <main>
+        <div class="edit-item">
+            <form action="/login/menu-items/<%=locals.menu_id%>/edit?_method=PATCH" method="POST">
+                    <h3>Edit Menu Item: <%= locals.menu_id %></h3></br>
+                        <label>Name:
+                            <input type="text" name="name" value="<%= locals.name %>" required>
+                        </label>
+                        <label>Description:
+                            <input type="text" name="description" value="<%= locals.description %>" required>
+                        </label>
+                        <label>Price:
+                            <input type="text" name="price" value="<%= locals.price %>" required>
+                        </label>
+                        <label>Category:
+                            <!-- <input type="text" name="category" value="<%= locals.category %>" required> -->
+                            <select name="category" value="<%= locals.category %>" required>
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Dinner">Dinner</option>
+                            </select>
+                        </label>
+                        <label>Image:
+                            <input type="text" name="image_url" value="<%= locals.image_url %>" required>
+                        </label>                 
+                <button type="submit" id = "update">Update</button>
+            </form>
+        </div>
+        </main>
+    </body>
+   
+    <%- include('./partials/footer.ejs') %>
+</html>

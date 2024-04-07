@@ -1,0 +1,11 @@
+Case 1- As a Martha's Good Eats customer I can see a home page telling me a about the retaurant with navigation to a menu page specific for customers.
+Case 2- As a Martha's Good Eats customer I can see a menu page listing all the menu items from the "Menu_Items" table in the qap3 database.
+Case 3- As a Martha's Good Eats Staff member I can see a home page with the option to Login from the navigation bar.
+Case 4 - As a Martha's Good Eats Staff member I can see a web page with the option to login using a username and password with validation against the "Logins" table in the qap3 database.
+Case 5 - As a Martha's Good Eats Staff member I can see a menu page listing all the menu items from the "Menu-Items" table in the qap3 database along with a form to add a new menu item. 
+Case 6 - As a Martha's Good Eats Staff member I can see a web page where I can edit an existng menu-item in the "Menu_Items" table in the qap3 database.
+Case 7 - As a Martha's Good Eats Staff member I can see a web page where I can delete an existing menu-item in the "Menu_Items" table in the qap3 database.
+Case 8 - As a Martha's Good Eats Staff member I can see a menu item detail page that displays when a specific menu item from the staff menu items listing has been selected.
+Case 9 - As a system admin, my api endpoint is fetching all menu items from the "Menu_Items" table in the qap3 database. /api/menu-items
+Case 10 - As a system admin, my api endpoint is fetching a single menu item from the "Menu_Items table in the qap3 database. /api/menu-items/:id
+Case 11 - As a system admin, I am able to POST a new menu item via my api.

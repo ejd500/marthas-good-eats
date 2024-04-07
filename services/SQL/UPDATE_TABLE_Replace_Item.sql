@@ -1,0 +1,2 @@
+UPDATE public."Menu_Items" SET name = 'Pancakes', description='A pile of pancakes with strawberries & blueberries.', price=14.99, category='Breakfast', image_url='https://unsplash.com/photos/pancakes-with-strawberries-and-blueberries-on-top-yxZSAjyToP4?utm_content=creditShareLink&utm_medium=referral&utm_source=unsplash'
+	WHERE menu_id = 1;

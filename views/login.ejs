@@ -1,0 +1,27 @@
+<html lang="en">
+    <%- include('./partials/head.ejs') %>
+    <%- include('./partials/header.ejs') %>
+   
+    <body>       
+        <div class="login-content">
+            <h3>Login:</h3><br/>
+            <form action="/login" method="POST"> 
+                <label for="username">Username:</label>
+                <input type="text" id="username" name=username  required>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+                <button id = "login" type="submit">Login</button>
+            </form>
+
+            <% if (error) { %>
+                <script>
+                  window.onload = function() {
+                    alert("<%= error %>");
+                  }
+                </script>
+            <% } %>
+            
+        </div>       
+    </body>
+    <%- include('./partials/footer.ejs') %>
+</html>

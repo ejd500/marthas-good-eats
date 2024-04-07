@@ -1,0 +1,1 @@
+curl -d "name=Spagetti&description=Spagetti&price=17.99&category=dinner&image_url=image.url" -X POST http://localhost:3000/api/menu-items

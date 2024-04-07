@@ -1,0 +1,1 @@
+INSERT INTO public."Logins"(username, password)VALUES ('test', 'test');
