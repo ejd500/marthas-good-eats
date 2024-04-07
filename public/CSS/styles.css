@@ -86,6 +86,7 @@ nav ul li a:hover {
     width: 160px;
     height: 160px;
     border-radius: 4px;
+    flex-shrink: 0; 
 }
 
 .item-details {

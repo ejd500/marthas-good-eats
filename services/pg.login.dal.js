@@ -1,12 +1,12 @@
 const dal = require("../services/pg.auth.db");
 
-var getLoginByUsername = function(username) {
-    if(DEBUG) console.log("Logins.pg.dal.getLoginByUsername()");
+var getLoginByEmail = function(email) {
+    if(DEBUG) console.log("Logins.pg.dal.getLoginByEmail()");
     return new Promise(function(resolve, reject) {
-      const sql = `SELECT username, password, "isStaff" FROM public."Logins" WHERE username = $1`;
-      dal.query(sql, [username], (err, result) => {
+      const sql = `SELECT user_id, first_name, last_name, email, password, is_staff FROM public."Users" WHERE email = $1`;
+      dal.query(sql, [email], (err, result) => {
         if (err) {
-          if(DEBUG) console.log("Unable to verify username.");
+          if(DEBUG) console.log("Unable to verify email.");
           reject(err);
         } else {
           resolve(result.rows);
@@ -31,4 +31,4 @@ var getLoginByUsername = function(username) {
 
   }
  
-module.exports = {getLoginByUsername};
+module.exports = {getLoginByEmail};

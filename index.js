@@ -42,7 +42,7 @@ app.use('/api/menu-items', apiMenuItemsRouter);
 
 app.use((req, res) => {
     res.status(404).render('404');
-  });
+});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
