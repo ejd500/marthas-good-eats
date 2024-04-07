@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const menuItemsDAL = require('../services/pg.menuItems.dal');
+//const menuItemsDAL = require('../services/pg.menuItems.dal');
 const loginDAL = require('../services/pg.login.dal');
 
 router.get('/', async (req, res) => {
@@ -10,14 +10,13 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   if(DEBUG) console.log('ROUTE: /login (POST)');
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await loginDAL.getLoginByUsername(username);
-    console.log(user);
-    if (user && user.length === 1) {
+    const user = await loginDAL.getLoginByEmail(email);
+    if (email && email.length !=0) {
       const storedPassword = user[0].password;
-      const isStaff = user[0].isStaff;
+      const isStaff = user[0].is_staff;
       if (password === storedPassword) {
         // Passwords match, authentication successful. 
         // IF USER IS STAFF: res.redirect('/management/product-management');
@@ -32,8 +31,8 @@ router.post('/', async (req, res) => {
         res.render('login', { error: 'Invalid Password Entered.' });
       }
     } else {
-      // Username not matched, authentication failed.
-      res.render('login', { error: 'Invalid Username Entered.' });
+      // Email not matched, authentication failed.
+      res.render('login', { error: 'Invalid Email Entered.' });
     }
   } catch (error) {
     console.error('Error authenticating user:', error);
