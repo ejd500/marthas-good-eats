@@ -6,7 +6,7 @@ INSERT INTO public."Menu_Items"(name, description, price, category, image_url)
 'Dinner','/Images/salmon.jpg');
 INSERT INTO public."Menu_Items"(name, description, price, category, image_url)
 	VALUES ('Fruit Tart','A flaky tart filled with fresh fruit and topped with a glaze.', 6.99, 
-'Desert','/Images/fruit_tart.jpg');
+'Dessert','/Images/fruit_tart.jpg');
 INSERT INTO public."Menu_Items"(name, description, price, category, image_url)
 	VALUES ('The Morning Muffin','A fluffy muffin filled with your choice of fruit, nuts, or chocolate chips. Served with butter and jam.', 4.99, 
 'Breakfast','/Images/muffin.jpg');

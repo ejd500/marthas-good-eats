@@ -11,16 +11,16 @@
             </div>  
             <% menuItems.forEach(item => { %>
                     <div class="menu-items-list">
-                        <a href="menu-items/<%= item.menu_id %>">   
-                    <strong>Menu ID:</strong> <%= item.menu_id %> - <strong>Name:</strong> <%= item.name %> - <strong>Price: </strong>$<%= item.price %>
+                        <a href="menu-items/<%= item.menu_id || item._id %>">   
+                    <strong>Menu ID:</strong> <%= item.menu_id || item._id %> - <strong>Name:</strong> <%= item.name %> - <strong>Price: </strong>$<%= item.price %>
                     </a>        
                     <div class = "links">
-                        <a href="menu-items/<%= item.menu_id %>/edit?name=<%= item.name %>">
+                        <a href="menu-items/<%= item.menu_id || item._id %>/edit?name=<%= item.name %>">
                         <button id="edit">Edit</button>
                         </a>
                           
                         <span class = "space"></span>
-                        <a href="menu-items/<%= item.menu_id %>/delete?name=<%= item.name %>">
+                        <a href="menu-items/<%= item.menu_id || item._id %>/delete?name=<%= item.name %>">
                         <button id = "delete">Delete</button>
                         </a>
                     </br> 
@@ -31,7 +31,7 @@
             <hr>
           
             <div class = "new-item">   
-                <form action="/login/menu-items" method="POST">
+                <form action="/management/menu-items" method="POST">
                     </br>
                     <label><h3>Add New Menu Item:</h3></label>
                     </br>
@@ -47,9 +47,11 @@
                     <label>Category:</label>
                         <!-- <input type="text" id="category" name="category" value="<%= locals.category %>" required> -->
                         <select name="category" value="<%= locals.category %>" required>
+                            <option value="Beverages">Beverages</option>
                             <option value="Breakfast">Breakfast</option>
                             <option value="Lunch">Lunch</option>
                             <option value="Dinner">Dinner</option>
+                            <option value="Dessert">Dessert</option>
                         </select>
                     
                     <label>Image URL:</label>
