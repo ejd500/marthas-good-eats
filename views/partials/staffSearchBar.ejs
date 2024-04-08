@@ -1,0 +1,25 @@
+<div class="search-bar">
+    <select id="databaseSelect">
+        <option value="select">Select Database</option>
+        <option value="postgres">Postgres</option>
+        <option value="mongo">Mongo</option>
+    </select>
+    <input type="search" name="search" id="staffSearchInput" class="searchInput" placeholder="Please select a database"/>
+    <button type="submit" class="searchButton"><img src="/Images/search.png" alt="search"/></button>
+   
+
+    <script>
+        document.getElementById("databaseSelect").addEventListener("change", function() {
+            var selectedOption = this.value;
+            var searchInput = document.getElementById("staffSearchInput");
+            
+            if (selectedOption === "postgres") {
+                searchInput.placeholder = "Search Postgres";
+            } else if (selectedOption === "mongo") {
+                searchInput.placeholder = "Search Mongo";
+            } else if (selectedOption === "select") {
+                searchInput.placeholder = "Please select a database";
+            }
+        });
+    </script>
+</div>

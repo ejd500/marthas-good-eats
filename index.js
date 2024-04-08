@@ -5,7 +5,7 @@ const express = require('express');
 const app = express();
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
-app.use(express.static('images'));
+app.use(express.static('Images'));
 app.use(express.urlencoded({ extended: true, }));
 const methodOverride = require('method-override');
 app.use(methodOverride('_method'));
