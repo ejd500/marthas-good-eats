@@ -5,12 +5,31 @@
 
     <body>
         <div id="registration">
-            Here is the Registration Page
-        </div>
+            <h3>Register Here</h3>
+            <br/>
+            <form action="/registration" method="POST" id="registrationForm"> 
+                <label for="first_name">First Name:&nbsp;
+                    <input type="text" id="first_name" name="first_name"  required>
+                </label>
+                <label for="last_name">Last Name:&nbsp;
+                    <input type="text" id="last_name" name="last_name"  required>
+                </label>
+                <label for="email">Email:&nbsp;
+                    <input type="text" id="email" name="email"  required>
+                </label>
+                <label for="password">Password:&nbsp; 
+                    <input type="password" id="password" name="password" required>
+                </label>
+                <label for="isStaff">Are you a staff member?&nbsp; 
+                    <select id="isStaff" name="isStaff">
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </label>
+                <button id = "register" type="submit">Submit</button>
+            </form>
+            
+        </div>       
     </body>
     <%- include('./partials/footer.ejs') %>
 </html>
-
-
-
-    

@@ -1,15 +1,19 @@
 <html lang="en">
     <%- include('./partials/head.ejs') %>
     <%- include('./partials/header.ejs') %>
+    <%- include('./partials/nav.ejs') %>
    
     <body>       
         <div class="login-content">
-            <h3>Login:</h3><br/>
-            <form action="/login" method="POST"> 
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email"  required>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+            <h3>Login</h3>
+            <br/>
+            <form action="/login" method="POST" id="loginForm"> 
+                <label for="email">Email:&nbsp;
+                    <input type="text" id="email" name="email"  required>
+                </label>
+                <label for="password">Password:&nbsp; 
+                    <input type="password" id="password" name="password" required>
+                </label>
                 <button id = "login" type="submit">Login</button>
             </form>
 
