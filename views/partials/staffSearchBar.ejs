@@ -1,25 +1,43 @@
-<div class="search-bar">
-    <select id="databaseSelect">
-        <option value="select">Select Database</option>
-        <option value="postgres">Postgres</option>
-        <option value="mongo">Mongo</option>
-    </select>
-    <input type="search" name="search" id="staffSearchInput" class="searchInput" placeholder="Please select a database"/>
-    <button type="submit" class="searchButton"><img src="/Images/search.png" alt="search"/></button>
-   
+<form id="searchForm" action="/management/menu-items" method="get">
+    <div class="search-bar">
+        <select id="databaseSelect" name="database">
+            <option value="select">Select Database</option>
+            <option value="postgres">Postgres</option>
+            <option value="mongo">Mongo</option>
+        </select>
+        <input type="search" name="search" id="staffSearchInput" class="searchInput" placeholder="Please select a database"/>
+        <button type="submit" class="searchButton"><img src="/Images/search.png" alt="search"/></button>
 
-    <script>
-        document.getElementById("databaseSelect").addEventListener("change", function() {
-            var selectedOption = this.value;
+        <script>
+            // Set the dropdown to the selected database option
+            const selectedDatabase = "<%= selectedDatabase %>";
+            document.getElementById("databaseSelect").value = selectedDatabase;
+
             var searchInput = document.getElementById("staffSearchInput");
-            
-            if (selectedOption === "postgres") {
+            if(selectedDatabase === "postgres"){
                 searchInput.placeholder = "Search Postgres";
-            } else if (selectedOption === "mongo") {
+            } else if(selectedDatabase === "mongo"){
                 searchInput.placeholder = "Search Mongo";
-            } else if (selectedOption === "select") {
+            } else if(selectedDatabase === ""){
+                searchInput.placeholder = "Please select a database";
+            } else if (selectedDatabase === "select"){
                 searchInput.placeholder = "Please select a database";
             }
-        });
-    </script>
-</div>
+
+            document.getElementById("databaseSelect").addEventListener("change", function() {
+                var selectedOption = this.value;
+                // Update the URL with the selected database option
+                var currentUrl = window.location.href;
+                var baseUrl = currentUrl.split('?')[0]; // Get the base URL without query parameters
+                var newUrl = baseUrl + '?database=' + selectedOption;
+                
+                // Update the URL without reloading the page
+                // window.location.href = newUrl;
+                history.pushState(null, null, newUrl);
+                // Submit the form
+                document.getElementById("searchForm").submit();
+            });
+        </script>
+    </div>
+</form>
+

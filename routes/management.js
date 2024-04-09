@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-//const menuItemsDAL = require('../services/pg.menuItems.dal');
-const menuItemsDAL = require('../services/m.menuItems.dal');
+const pgMenuItemsDAL = require('../services/pg.menuItems.dal');
+const mongoMenuItemsDAL = require('../services/m.menuItems.dal');
+
+var selectedDatabase = '';
 
 router.get('/', async (req, res) => {
     if(DEBUG) console.log('ROUTE: /management');
@@ -9,74 +11,168 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/menu-items', async (req, res) => {
-    if(DEBUG) console.log('ROUTE: /management/menu-items');      
-    try {
-      let menuItems = await menuItemsDAL.getMenuItems(); 
-      if(DEBUG) console.table(menuItems);
-      res.render('menuItemsStaff', {menuItems:menuItems});
-    } catch (error) {
-      res.status(500);
-      res.render('500', {error: error});
-    };
+    if(DEBUG) console.log('ROUTE: /management/menu-items');
+    selectedDatabase = req.query.database;
+    console.log("Selected Database: " + selectedDatabase)
+    if(selectedDatabase == undefined){
+      if(DEBUG) console.log("UNDEFINED")
+      try {
+        let menuItems = await pgMenuItemsDAL.getMenuItems(); 
+        // if(DEBUG) console.log(menuItems);
+        res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
+      } catch (error) {
+        res.status(500);
+        res.render('500', {error: error});
+      };
+      
+    } else if(selectedDatabase == 'postgres'){
+      if(DEBUG) console.log("POSTGRES");
+      try {
+        let menuItems = await pgMenuItemsDAL.getMenuItems(); 
+        // if(DEBUG) console.log(menuItems);
+        res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
+      } catch (error) {
+        res.status(500);
+        res.render('500', {error: error});
+      };
+    } else if(selectedDatabase == 'mongo'){
+      if(DEBUG) console.log("MONGO")
+      try {
+        let menuItems = await mongoMenuItemsDAL.getMenuItems(); 
+        // if(DEBUG) console.log(menuItems);
+        res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
+      } catch (error) {
+        res.status(500);
+        res.render('500', {error: error});
+      };
+    }
+    
 });
 
 router.get('/menu-items/:id', async (req, res) => {
     if(DEBUG) console.log('ROUTE: /management/menu-items/' + req.params.id);
-    try {
-      let menuItem = await menuItemsDAL.getMenuItemById(req.params.id); 
-      if(DEBUG) console.table(menuItem);
-      res.render('menuItem', {menuItem:menuItem});
-    } catch (error){
-      res.status(500);
-      res.render('500', {error: error});
-    };
+    var objectID = req.params.id;
+
+    if (/^\d+$/.test(objectID)){
+      try {
+        let menuItem = await pgMenuItemsDAL.getMenuItemById(req.params.id); 
+        // if(DEBUG) console.log(menuItem);
+        res.render('menuItem', {menuItem:menuItem});
+      } catch (error){
+        res.status(500);
+        res.render('500', {error: error});
+      };
+    } else {
+      try {
+        let menuItem = await mongoMenuItemsDAL.getMenuItemById(req.params.id); 
+        // if(DEBUG) console.log(menuItem);
+        res.render('menuItem', {menuItem:menuItem});
+      } catch (error){
+        res.status(500);
+        res.render('500', {error: error});
+      };
+    }
 });
   
   
 router.get('/menu-items/:id/edit', async (req, res) => {
     if(DEBUG) console.log('ROUTE /management/menu-items/' + req.params.id + '/edit');
-    let menuItem = await menuItemsDAL.getMenuItemById(req.params.id); 
-  res.render('menuItemPatch', {...menuItem});
+    var objectID = req.params.id;
+    console.log("Object ID: " + objectID);
+
+    if (/^\d+$/.test(objectID)){
+      let menuItem = await pgMenuItemsDAL.getMenuItemById(req.params.id); 
+      res.render('menuItemPatch', {...menuItem});
+    } else {
+      let menuItem = await mongoMenuItemsDAL.getMenuItemById(req.params.id); 
+      res.render('menuItemPatch', {...menuItem});
+    }
 });
   
   
 router.get('/menu-items/:id/delete', async (req, res) => {
     if(DEBUG) console.log('ROUTE: /management/menu-items/' + req.params.id + '/delete');
-    let menuItem = await menuItemsDAL.getMenuItemById(req.params.id);
-    res.render('menuItemDelete', {...menuItem});
+    var objectID = req.params.id;
+    console.log("Object ID: " + objectID);
+
+    if (/^\d+$/.test(objectID)){
+      let menuItem = await pgMenuItemsDAL.getMenuItemById(req.params.id);
+      res.render('menuItemDelete', {...menuItem});
+    } else {
+      let menuItem = await mongoMenuItemsDAL.getMenuItemById(req.params.id);
+      res.render('menuItemDelete', {...menuItem});
+    }
 });
 
-router.post('/menu-items/', async (req, res) => {
+router.post(`/menu-items`, async (req, res) => {
     if(DEBUG) console.log("menuItemsStaff.POST");
-    try {
-        await menuItemsDAL.addMenuItem(req.body.name, req.body.description, req.body.price, req.body.category, req.body.image_url);
-        res.redirect('/management/menu-items');
-    } catch (error){
-        res.status(500);
-        res.render('500', {error: error});
-    } 
+    if(DEBUG) console.log("This is the selected database: " + selectedDatabase)
+    if(selectedDatabase == "postgres"){
+      try {
+          let menuItems = await pgMenuItemsDAL.getMenuItems(); 
+          await pgMenuItemsDAL.addMenuItem(req.body.name, req.body.description, req.body.price, req.body.category, req.body.image_url);
+          res.render(`menuItemsStaff`, {menuItems: menuItems, selectedDatabase: selectedDatabase});
+      } catch (error){
+          res.status(500);
+          res.render('500', {error: error});
+      } 
+    } else if (selectedDatabase == "mongo"){
+      try {
+        let menuItems = await mongoMenuItemsDAL.getMenuItems(); 
+        await mongoMenuItemsDAL.addMenuItem(req.body.name, req.body.description, req.body.price, req.body.category, req.body.image_url);
+        res.render(`menuItemsStaff`, {menuItems: menuItems, selectedDatabase: selectedDatabase});
+      } catch (error){
+          res.status(500);
+          res.render('500', {error: error});
+      } 
+    }
 });
 
 router.patch('/menu-items/:id/edit', async (req, res) => {
     if(DEBUG) console.log('ROUTE /management/menu-items/' + req.params.id +  '/edit (PATCH)' );
-    try {
-      await menuItemsDAL.patchMenuItem(req.params.id, req.body.name, req.body.description, req.body.price, req.body.category, req.body.image_url);
-      res.redirect('/management/menu-items');
-    } catch (error) {
-      res.status = (500);
-      res.render('500', {error: error});
+    var objectID = req.params.id;
+    console.log("Object id: " + objectID);
+
+    if (/^\d+$/.test(objectID)){
+      try {
+        await pgMenuItemsDAL.patchMenuItem(req.params.id, req.body.name, req.body.description, req.body.price, req.body.category, req.body.image_url);
+        res.redirect('/management/menu-items');
+      } catch (error) {
+        res.status = (500);
+        res.render('500', {error: error});
+      }
+    } else {
+      try {
+        await mongoMenuItemsDAL.patchMenuItem(req.params.id, req.body.name, req.body.description, req.body.price, req.body.category, req.body.image_url);
+        res.redirect('/management/menu-items');
+      } catch (error) {
+        res.status = (500);
+        res.render('500', {error: error});
+      }
     }
 });
 
 router.delete('/menu-items/:id/delete', async (req, res) => {            
   if(DEBUG) console.log('MenuItems.DELETE: ' + req.params.id);
-  try {
-      await menuItemsDAL.deleteMenuItem(req.params.id);
+  var objectID = req.params.id;
+  if (/^\d+$/.test(objectID)){
+    try {
+      await pgMenuItemsDAL.deleteMenuItem(req.params.id);
       res.redirect('/management/menu-items');
-  } catch (error){
+    } catch (error){
       res.status(500);
       res.render('500', {error: error});
-}});
+    }
+  } else {
+    try {
+      await mongoMenuItemsDAL.deleteMenuItem(req.params.id);
+      res.redirect('/management/menu-items');
+    } catch (error){
+      res.status(500);
+      res.render('500', {error: error});
+    }
+  }
+});
 
 router.get('/logout', async (req, res) => {
     if(DEBUG) console.log('ROUTE: /management/logout');
