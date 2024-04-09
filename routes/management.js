@@ -14,9 +14,9 @@ router.get('/menu-items', async (req, res) => {
       let menuItems = await menuItemsDAL.getMenuItems(); 
       if(DEBUG) console.table(menuItems);
       res.render('menuItemsStaff', {menuItems:menuItems});
-    } catch {
+    } catch (error) {
       res.status(500);
-      res.render('500');
+      res.render('500', {error: error});
     };
 });
 
@@ -26,9 +26,9 @@ router.get('/menu-items/:id', async (req, res) => {
       let menuItem = await menuItemsDAL.getMenuItemById(req.params.id); 
       if(DEBUG) console.table(menuItem);
       res.render('menuItem', {menuItem:menuItem});
-    } catch {
+    } catch (error){
       res.status(500);
-      res.render('500');
+      res.render('500', {error: error});
     };
 });
   
@@ -51,9 +51,9 @@ router.post('/menu-items/', async (req, res) => {
     try {
         await menuItemsDAL.addMenuItem(req.body.name, req.body.description, req.body.price, req.body.category, req.body.image_url);
         res.redirect('/management/menu-items');
-    } catch (err){
+    } catch (error){
         res.status(500);
-        res.render('500');
+        res.render('500', {error: error});
     } 
 });
 
@@ -62,9 +62,9 @@ router.patch('/menu-items/:id/edit', async (req, res) => {
     try {
       await menuItemsDAL.patchMenuItem(req.params.id, req.body.name, req.body.description, req.body.price, req.body.category, req.body.image_url);
       res.redirect('/management/menu-items');
-    } catch {
+    } catch (error) {
       res.status = (500);
-      res.render('500');
+      res.render('500', {error: error});
     }
 });
 
@@ -73,9 +73,9 @@ router.delete('/menu-items/:id/delete', async (req, res) => {
   try {
       await menuItemsDAL.deleteMenuItem(req.params.id);
       res.redirect('/management/menu-items');
-  } catch {
+  } catch (error){
       res.status(500);
-      res.render('500');
+      res.render('500', {error: error});
 }});
 
 router.get('/logout', async (req, res) => {
