@@ -5,10 +5,10 @@
     
     <body>
         <div class="delete">
-            <form action="/login/menu-items/<%= locals.menu_id %>/delete?_method=DELETE" method="POST">
+            <form action="/management/menu-items/<%= locals.menu_id || locals._id %>/delete?_method=DELETE" method="POST">
                 <label>Are you sure you want to delete this Menu Item?</label></br>
                 </br>
-                <input type="text" id=<%=locals.menu_id %> name="name" value= "Menu ID: <%= locals.menu_id %> - <%= locals.name %>" readonly>
+                <input type="text" id=<%=locals.menu_id || locals._id %> name="name" value= "Menu ID: <%= locals.menu_id || locals._id %> - <%= locals.name %>" readonly>
             
                 <button type="submit" id = "delete">DELETE</button>
             </form>

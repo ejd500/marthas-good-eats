@@ -6,8 +6,8 @@
     <body>
         <main>
         <div class="edit-item">
-            <form action="/login/menu-items/<%=locals.menu_id%>/edit?_method=PATCH" method="POST">
-                    <h3>Edit Menu Item: <%= locals.menu_id %></h3></br>
+            <form action="/management/menu-items/<%=locals.menu_id || locals._id%>/edit?_method=PATCH" method="POST">
+                    <h3>Edit Menu Item: <%= locals.menu_id || locals._id %></h3></br>
                         <label>Name:
                             <input type="text" name="name" value="<%= locals.name %>" required>
                         </label>
@@ -20,9 +20,12 @@
                         <label>Category:
                             <!-- <input type="text" name="category" value="<%= locals.category %>" required> -->
                             <select name="category" value="<%= locals.category %>" required>
+                                <option value="Beverages">Beverages</option>
                                 <option value="Breakfast">Breakfast</option>
                                 <option value="Lunch">Lunch</option>
                                 <option value="Dinner">Dinner</option>
+                               
+                                <option value="Dessert">Dessert</option>
                             </select>
                         </label>
                         <label>Image:
