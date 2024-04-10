@@ -45,6 +45,16 @@ router.get('/menu-items', async (req, res) => {
         res.status(500);
         res.render('500', {error: error});
       };
+    } else if(selectedDatabase == 'select'){
+      if(DEBUG) console.log("SELECT")
+      try {
+        let menuItems = await pgMenuItemsDAL.getMenuItems(); 
+        // if(DEBUG) console.log(menuItems);
+        res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
+      } catch (error) {
+        res.status(500);
+        res.render('500', {error: error});
+      };
     }
     
 });
@@ -104,26 +114,25 @@ router.get('/menu-items/:id/delete', async (req, res) => {
     }
 });
 
+
 router.post(`/menu-items`, async (req, res) => {
     if(DEBUG) console.log("menuItemsStaff.POST");
     if(DEBUG) console.log("This is the selected database: " + selectedDatabase)
     if(selectedDatabase == "postgres"){
       try {
-          let menuItems = await pgMenuItemsDAL.getMenuItems(); 
-          await pgMenuItemsDAL.addMenuItem(req.body.name, req.body.description, req.body.price, req.body.category, req.body.image_url);
-          res.render(`menuItemsStaff`, {menuItems: menuItems, selectedDatabase: selectedDatabase});
+        await pgMenuItemsDAL.addMenuItem(req.body.name, req.body.description, req.body.price, req.body.category, req.body.image_url);
+        res.redirect(`/management/menu-items`);
       } catch (error){
-          res.status(500);
-          res.render('500', {error: error});
+        res.status(500);
+        res.render('500', {error: error});
       } 
     } else if (selectedDatabase == "mongo"){
       try {
-        let menuItems = await mongoMenuItemsDAL.getMenuItems(); 
         await mongoMenuItemsDAL.addMenuItem(req.body.name, req.body.description, req.body.price, req.body.category, req.body.image_url);
-        res.render(`menuItemsStaff`, {menuItems: menuItems, selectedDatabase: selectedDatabase});
+        res.redirect(`/management/menu-items`);
       } catch (error){
-          res.status(500);
-          res.render('500', {error: error});
+        res.status(500);
+        res.render('500', {error: error});
       } 
     }
 });
