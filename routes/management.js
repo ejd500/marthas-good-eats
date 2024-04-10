@@ -4,8 +4,29 @@ const pgMenuItemsDAL = require('../services/pg.menuItems.dal');
 const mongoMenuItemsDAL = require('../services/m.menuItems.dal');
 const pgFullTextDAL = require('../services/pg.fulltext.dal');
 const mongoFullTextDAL = require('../services/m.fulltext.dal');
+const pgLoginDAL = require('../services/pg.login.dal');
+const fs = require('fs');
+const path = require('path');
 
 var selectedDatabase = '';
+
+// define/extend an EventEmitter class
+const EventEmitter = require('events');
+class MyEmitter extends EventEmitter {};
+// initialize a new emitter object
+const myEmitter = new EventEmitter();
+
+myEmitter.on("searchLog", (searchWords, userID, selectedDatabase)=>{
+  const date = new Date;
+  if(DEBUG) console.log(`User ID ${userID} searched ${selectedDatabase} for "${searchWords}" on ${date}`)
+
+  if(!fs.existsSync(path.join(__dirname, '..', 'logs'))){
+      fs.mkdirSync(path.join(__dirname, '..', 'logs'));
+  }
+  fs.appendFile(path.join(__dirname, '..', 'logs', 'search.log'), `User ID ${userID} searched ${selectedDatabase} for "${searchWords}" on ${date}\n`, (error)=>{if(error) throw error})
+
+})
+
 
 router.get('/', async (req, res) => {
     if(DEBUG) console.log('ROUTE: /management');
@@ -31,7 +52,6 @@ router.get('/menu-items', async (req, res) => {
       if(DEBUG) console.log("POSTGRES");
       var searchWords = req.query.search;
       if (DEBUG) console.log("Search Words: " + searchWords);
-
       try {
         var result = await pgFullTextDAL.getFullText(searchWords);
         console.log("Result: " + result);
@@ -39,6 +59,14 @@ router.get('/menu-items', async (req, res) => {
           let menuItems = await pgMenuItemsDAL.getMenuItems(); 
           res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
         } else {
+          var email = req.session.email;
+          if (DEBUG) console.log("Email: " + email);
+          var user = await pgLoginDAL.getLoginByEmail(email);
+          if (DEBUG) console.log(user);
+          var userID = user[0].user_id;
+          if (DEBUG) console.log("User ID: " + userID);
+          myEmitter.emit('searchLog', searchWords, userID, selectedDatabase);
+          
           res.render('menuItemsStaff', {menuItems: result, selectedDatabase: selectedDatabase});
         }
     
@@ -55,6 +83,10 @@ router.get('/menu-items', async (req, res) => {
           let menuItems = await mongoMenuItemsDAL.getMenuItems(); 
           res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
         } else {
+          var email = req.session.email;
+          var user = await pgLoginDAL.getLoginByEmail(email);
+          var userID = user[0].user_id;
+          myEmitter.emit('searchLog', searchWords, userID, selectedDatabase);
           var result = await mongoFullTextDAL.getFullText(searchWords);
           res.render('menuItemsStaff', {menuItems: result, selectedDatabase: selectedDatabase});
         }
