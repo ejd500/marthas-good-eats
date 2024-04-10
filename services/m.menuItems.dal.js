@@ -5,6 +5,7 @@ async function getMenuItems() {
     if(DEBUG) console.log("Menu_Items.mongo.dal.getMenuItems()");
     try {
       await mongoDAL.connect();
+      console.log("Connected to Mongo database")
       const cursor = mongoDAL.db("Restaurant").collection("Menu_Items").find();
       const results = await cursor.toArray();
       return results;
@@ -37,20 +38,26 @@ async function addMenuItem(name, description, price, category, image_url) {
   if(DEBUG) console.log("Menu_Items.mongo.dal.addMenuItem()");
   let newMenuItem = JSON.parse(`{"name": "${name}", "description": "${description}", "price": "${price}", "category": "${category}", "image_url": "${image_url}"}`);
   if(DEBUG) console.log(newMenuItem);
+
   try {
     await mongoDAL.connect();
-    const result = await mongoDAL.db("Restaurant").collection("Menu_Items").insertOne(newMenuItem);
-    if(DEBUG) console.log(`insertedId: ${result.insertedId}`)
-      return result.insertedId;
+    console.log("Connected to MongoDB");
+    const database = mongoDAL.db("Restaurant");
+    const collection = database.collection("Menu_Items");
+    const result = await collection.insertOne(newMenuItem);
+    // const result = await mongoDAL.db("Restaurant").collection("Menu_Items").insertOne(newMenuItem);
+    if(DEBUG) console.log(`InsertedId: ${result.insertedId}`)
+    return result.insertedId;
   } catch (error) {
-    if(DEBUG) console.log(`mongo error: ${error.code}`)
-    if(error.code === 11000) {  
-    return error.code;
-    }
+    if(DEBUG) console.log(`mongo error: ${error}`)
+    return error;
+    // if(error.code === 11000) {  
+    //   return error.code;
+    // }
     // record the error in event logging
-    console.log(error);
   } finally {
     mongoDAL.close();
+    console.log("Disconnected from MongoDB");
   }
 };
 
