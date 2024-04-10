@@ -1,6 +1,6 @@
 <div class="search-bar">
     <select id="categorySelect">
-        <option value="select">Select Category</option>
+        <option value="Select">Select Category</option>
         <option value="All">All Categories</option>
         <option value="Beverages">Beverages</option>
         <option value="Breakfast">Breakfast</option>
@@ -10,40 +10,43 @@
     </select>
     <input type="search" name="search" id="customerSearchInput" class="searchInput" placeholder="Please select a category"/>
     <button type="submit" class="searchButton"><img src="/Images/search.png" alt="search"/></button>
-   
-
-    <script>
-        document.getElementById("categorySelect").addEventListener("change", function() {
-            var selectedOption = this.value;
-            var searchInput = document.getElementById("customerSearchInput");
-            
-            if (selectedOption === "All") {
-                searchInput.placeholder = "Search All Categories";
-            } else if (selectedOption === "Select") {
-                searchInput.placeholder = "Please select a category";
-            } else if (selectedOption === "Beverages") {
-                searchInput.placeholder = "Search Beverage Items";
-            } else if (selectedOption === "Breakfast") {
-                searchInput.placeholder = "Search Breakfast Items";
-            } else if (selectedOption === "Lunch") {
-                searchInput.placeholder = "Search Lunch Items";
-            } else if (selectedOption === "Dinner") {
-                searchInput.placeholder = "Search Dinner Items";
-            } else if (selectedOption === "Dessert") {
-                searchInput.placeholder = "Search Dessert Items";
-            }
-        });
-    </script>
+</div>
 
 <script>
-    document.getElementById("categorySelect").addEventListener("change", function() {
-        var selectedCategory = this.value;
-        
-        window.location.href = "/menu-items/?category=" + encodeURIComponent(selectedCategory);
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // Get query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Get category from parameters
+        const selectedCategory = urlParams.get('category');
+
+        const categorySelect = document.getElementById('categorySelect');
+        const searchInput = document.getElementById('customerSearchInput');
+
+        // Once a category is selected, set dropdown value & placeholder.
+
+        if (selectedCategory) {
+            categorySelect.value = selectedCategory;
+            searchInput.placeholder = selectedCategory === 'All' ? 'Search All Categories' : `Search ${selectedCategory} Items`;
+        }
+
+        // When category is changed, update placeholder text based on category and redirect user to URL with the selected category as a query parameter.
+
+        categorySelect.addEventListener('change', function() {
+            const selectedOption = this.value;
+            searchInput.placeholder = selectedOption === 'All' ? 'Search All Categories' : `Search ${selectedOption} Items`;
+            window.location.href = "/menu-items/?category=" + encodeURIComponent(selectedOption);
+        });
+
+        // When search is clicked, retrieve search input value and  selected category, update these values as query parameters, and redirect user to URL.
+
+        document.querySelector('.searchButton').addEventListener('click', function() {
+            const searchInputValue = document.getElementById('customerSearchInput').value;
+            const categoryValue = document.getElementById('categorySelect').value;
+            const url = `/menu-items/?search=${encodeURIComponent(searchInputValue)}&category=${encodeURIComponent(categoryValue)}`;
+            window.location.href = url;
+        });
     });
 </script>
-
-
-
-
-</div>

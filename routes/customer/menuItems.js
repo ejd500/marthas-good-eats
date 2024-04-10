@@ -2,28 +2,39 @@ const express = require('express');
 const router = express.Router();
 const menuItemsDAL = require('../../services/pg.menuItems.dal');
 //const menuItemsDAL = require('../../services/m.menuItems.dal');
+const pgFullTextDAL = require('../../services/pg.fulltext.dal');
 
 router.get('/', async (req, res) => {
-    if(DEBUG) console.table('ROUTE: /menu-items (GET)');   
+    if (DEBUG) console.table('ROUTE: /menu-items (GET)');     
     try {
-      let menuItems = await menuItemsDAL.getMenuItems(); 
-      
+        let menuItems;
+        const searchText = req.query.search;
+        if (searchText) {
+            menuItems = await pgFullTextDAL.getFullText(searchText);
+        } else {
+            menuItems = await menuItemsDAL.getMenuItems(); 
+        }
+        
+      // Filter by category if provided
       const category = req.query.category;
       if (DEBUG) console.log('Received category:', category);
-        if (category && category !== 'All') {
-            menuItems = menuItems.filter(item => item.category === category);
-        }
-     
-      if(DEBUG) console.log(menuItems);
+      if (category && category !== 'All') {
+          menuItems = menuItems.filter(item => item.category === category);
+      }
+
+      // Group menu items by category
       const groupedMenuItems = menuItems.reduce((acc, item) => {
-      acc[item.category] = acc[item.category] || [];
-      acc[item.category].push(item);
-      return acc;
+          acc[item.category] = acc[item.category] || [];
+          acc[item.category].push(item);
+          return acc;
       }, {});
-      res.render('menuItems', {groupedMenuItems:groupedMenuItems});
-    } catch {
-        res.render('503');
-    };
+
+      res.render('menuItems', { groupedMenuItems: groupedMenuItems, selectedCategory: category });
+  } catch (err) {
+      console.error(err);
+      res.status('500');
+      res.render('500', {error: err});
+  }
 });
 
 module.exports = router;
