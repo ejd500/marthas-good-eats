@@ -21,6 +21,10 @@ router.post('/', async (req, res) => {
         // Passwords match, authentication successful. 
         // IF USER IS STAFF: res.redirect('/management/product-management');
         // ELSE IF USER IS CUSTOMER:   res.redirect('/home');
+        
+        // Set email in session
+        req.session.email = email;
+
         if(isStaff){
           res.redirect('/management');
         } else{
