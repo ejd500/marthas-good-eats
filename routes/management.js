@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const pgMenuItemsDAL = require('../services/pg.menuItems.dal');
 const mongoMenuItemsDAL = require('../services/m.menuItems.dal');
+const pgFullTextDAL = require('../services/pg.fulltext.dal');
 
 var selectedDatabase = '';
 
@@ -17,7 +18,7 @@ router.get('/menu-items', async (req, res) => {
     if(selectedDatabase == undefined){
       if(DEBUG) console.log("UNDEFINED")
       try {
-        let menuItems = await pgMenuItemsDAL.getMenuItems(); 
+        // let menuItems = await pgMenuItemsDAL.getMenuItems(); 
         // if(DEBUG) console.log(menuItems);
         res.render('menuItemsStaff', {menuItems:[], selectedDatabase: selectedDatabase});
       } catch (error) {
@@ -27,10 +28,18 @@ router.get('/menu-items', async (req, res) => {
       
     } else if(selectedDatabase == 'postgres'){
       if(DEBUG) console.log("POSTGRES");
+      var searchWords = req.query.search;
+      if(DEBUG) console.log(searchWords);
       try {
-        let menuItems = await pgMenuItemsDAL.getMenuItems(); 
-        // if(DEBUG) console.log(menuItems);
-        res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
+        var result = await pgFullTextDAL.getFullText(searchWords);
+        console.log("Result: " + result);
+        if(searchWords == ''){
+          let menuItems = await pgMenuItemsDAL.getMenuItems(); 
+          res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
+        } else {
+          res.render('menuItemsStaff', {menuItems: result, selectedDatabase: selectedDatabase});
+        }
+    
       } catch (error) {
         res.status(500);
         res.render('500', {error: error});
@@ -48,7 +57,7 @@ router.get('/menu-items', async (req, res) => {
     } else if(selectedDatabase == 'select'){
       if(DEBUG) console.log("SELECT")
       try {
-        let menuItems = await pgMenuItemsDAL.getMenuItems(); 
+        // let menuItems = await pgMenuItemsDAL.getMenuItems(); 
         // if(DEBUG) console.log(menuItems);
         res.render('menuItemsStaff', {menuItems:[], selectedDatabase: selectedDatabase});
       } catch (error) {
