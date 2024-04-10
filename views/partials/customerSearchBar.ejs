@@ -1,12 +1,12 @@
 <div class="search-bar">
     <select id="categorySelect">
         <option value="select">Select Category</option>
-        <option value="all">All Categories</option>
-        <option value="beverages">Beverages</option>
-        <option value="breakfast">Breakfast</option>
-        <option value="lunch">Lunch</option>
-        <option value="dinner">Dinner</option>
-        <option value="dessert">Dessert</option>
+        <option value="All">All Categories</option>
+        <option value="Beverages">Beverages</option>
+        <option value="Breakfast">Breakfast</option>
+        <option value="Lunch">Lunch</option>
+        <option value="Dinner">Dinner</option>
+        <option value="Dessert">Dessert</option>
     </select>
     <input type="search" name="search" id="customerSearchInput" class="searchInput" placeholder="Please select a category"/>
     <button type="submit" class="searchButton"><img src="/Images/search.png" alt="search"/></button>
@@ -17,21 +17,33 @@
             var selectedOption = this.value;
             var searchInput = document.getElementById("customerSearchInput");
             
-            if (selectedOption === "all") {
+            if (selectedOption === "All") {
                 searchInput.placeholder = "Search All Categories";
-            } else if (selectedOption === "select") {
+            } else if (selectedOption === "Select") {
                 searchInput.placeholder = "Please select a category";
-            } else if (selectedOption === "beverages") {
+            } else if (selectedOption === "Beverages") {
                 searchInput.placeholder = "Search Beverage Items";
-            } else if (selectedOption === "breakfast") {
+            } else if (selectedOption === "Breakfast") {
                 searchInput.placeholder = "Search Breakfast Items";
-            } else if (selectedOption === "lunch") {
+            } else if (selectedOption === "Lunch") {
                 searchInput.placeholder = "Search Lunch Items";
-            } else if (selectedOption === "dinner") {
+            } else if (selectedOption === "Dinner") {
                 searchInput.placeholder = "Search Dinner Items";
-            } else if (selectedOption === "dessert") {
+            } else if (selectedOption === "Dessert") {
                 searchInput.placeholder = "Search Dessert Items";
             }
         });
     </script>
+
+<script>
+    document.getElementById("categorySelect").addEventListener("change", function() {
+        var selectedCategory = this.value;
+        
+        window.location.href = "/menu-items/?category=" + encodeURIComponent(selectedCategory);
+    });
+</script>
+
+
+
+
 </div>

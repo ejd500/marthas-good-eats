@@ -19,7 +19,7 @@ var createUser = function(firstName, lastName, email, password, isStaff){
   if(DEBUG) console.log("pg.login.dal.createUser()");
   return new Promise (function(resolve, reject){
     const sql = `INSERT INTO public."Users"(first_name, last_name, email, password, is_staff) VALUES ('${firstName}', '${lastName}', '${email}', '${password}', ${isStaff});`
-    dal.query(sql, [], (err, result)=>{
+    pgDAL.query(sql, [], (err, result)=>{
       if(err){
         console.log(err)
         reject(err);

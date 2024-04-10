@@ -1,12 +1,19 @@
 const express = require('express');
 const router = express.Router();
-//const menuItemsDAL = require('../../services/pg.menuItems.dal');
-const menuItemsDAL = require('../../services/m.menuItems.dal');
+const menuItemsDAL = require('../../services/pg.menuItems.dal');
+//const menuItemsDAL = require('../../services/m.menuItems.dal');
 
 router.get('/', async (req, res) => {
     if(DEBUG) console.table('ROUTE: /menu-items (GET)');   
     try {
       let menuItems = await menuItemsDAL.getMenuItems(); 
+      
+      const category = req.query.category;
+      if (DEBUG) console.log('Received category:', category);
+        if (category && category !== 'All') {
+            menuItems = menuItems.filter(item => item.category === category);
+        }
+     
       if(DEBUG) console.log(menuItems);
       const groupedMenuItems = menuItems.reduce((acc, item) => {
       acc[item.category] = acc[item.category] || [];
