@@ -3,6 +3,7 @@ const router = express.Router();
 const pgMenuItemsDAL = require('../services/pg.menuItems.dal');
 const mongoMenuItemsDAL = require('../services/m.menuItems.dal');
 const pgFullTextDAL = require('../services/pg.fulltext.dal');
+const mongoFullTextDAL = require('../services/m.fulltext.dal');
 
 var selectedDatabase = '';
 
@@ -29,7 +30,8 @@ router.get('/menu-items', async (req, res) => {
     } else if(selectedDatabase == 'postgres'){
       if(DEBUG) console.log("POSTGRES");
       var searchWords = req.query.search;
-      if(DEBUG) console.log(searchWords);
+      if (DEBUG) console.log("Search Words: " + searchWords);
+
       try {
         var result = await pgFullTextDAL.getFullText(searchWords);
         console.log("Result: " + result);
@@ -46,10 +48,16 @@ router.get('/menu-items', async (req, res) => {
       };
     } else if(selectedDatabase == 'mongo'){
       if(DEBUG) console.log("MONGO")
+      var searchWords = req.query.search;
+      if(DEBUG) console.log(searchWords);
       try {
-        let menuItems = await mongoMenuItemsDAL.getMenuItems(); 
-        // if(DEBUG) console.log(menuItems);
-        res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
+        if(searchWords == ''){
+          let menuItems = await mongoMenuItemsDAL.getMenuItems(); 
+          res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
+        } else {
+          var result = await mongoFullTextDAL.getFullText(searchWords);
+          res.render('menuItemsStaff', {menuItems: result, selectedDatabase: selectedDatabase});
+        }
       } catch (error) {
         res.status(500);
         res.render('500', {error: error});
@@ -57,8 +65,6 @@ router.get('/menu-items', async (req, res) => {
     } else if(selectedDatabase == 'select'){
       if(DEBUG) console.log("SELECT")
       try {
-        // let menuItems = await pgMenuItemsDAL.getMenuItems(); 
-        // if(DEBUG) console.log(menuItems);
         res.render('menuItemsStaff', {menuItems:[], selectedDatabase: selectedDatabase});
       } catch (error) {
         res.status(500);
