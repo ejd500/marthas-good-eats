@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const menuItemsDAL = require('../../services/pg.menuItems.dal');
 //const menuItemsDAL = require('../../services/m.menuItems.dal');
-const pgFullTextDAL = require('../../services/pg.fulltext.dal');
+const fullTextDAL = require('../../services/pg.fulltext.dal');
+//const fullTextDAL = require('../../services/m.fulltext.dal');
+
 
 router.get('/', async (req, res) => {
     if (DEBUG) console.table('ROUTE: /menu-items (GET)');     
@@ -10,7 +12,7 @@ router.get('/', async (req, res) => {
         let menuItems;
         const searchText = req.query.search;
         if (searchText) {
-            menuItems = await pgFullTextDAL.getFullText(searchText);
+            menuItems = await fullTextDAL.getFullText(searchText);
         } else {
             menuItems = await menuItemsDAL.getMenuItems(); 
         }
