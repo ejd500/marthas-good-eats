@@ -19,7 +19,7 @@ router.get('/menu-items', async (req, res) => {
       try {
         let menuItems = await pgMenuItemsDAL.getMenuItems(); 
         // if(DEBUG) console.log(menuItems);
-        res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
+        res.render('menuItemsStaff', {menuItems:[], selectedDatabase: selectedDatabase});
       } catch (error) {
         res.status(500);
         res.render('500', {error: error});
@@ -50,7 +50,7 @@ router.get('/menu-items', async (req, res) => {
       try {
         let menuItems = await pgMenuItemsDAL.getMenuItems(); 
         // if(DEBUG) console.log(menuItems);
-        res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
+        res.render('menuItemsStaff', {menuItems:[], selectedDatabase: selectedDatabase});
       } catch (error) {
         res.status(500);
         res.render('500', {error: error});
