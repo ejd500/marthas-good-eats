@@ -6,6 +6,7 @@ const fullTextDAL = require('../../services/pg.fulltext.dal');
 //const fullTextDAL = require('../../services/m.fulltext.dal');
 
 
+
 router.get('/', async (req, res) => {
     if (DEBUG) console.table('ROUTE: /menu-items (GET)');     
     try {
