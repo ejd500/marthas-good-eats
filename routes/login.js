@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 
         if (DEBUG) console.log(req.session.user);
 
-        if (isStaff) {
+        if(isStaff){
           res.redirect('/management');
           
         } else {
