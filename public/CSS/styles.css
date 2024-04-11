@@ -412,6 +412,14 @@ footer{
     justify-content: space-between;
 }
 
+.fourohthree{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin: 60px;
+    align-items: center;
+}
+
 
 
 
