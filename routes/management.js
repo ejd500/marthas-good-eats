@@ -47,7 +47,6 @@ router.get('/menu-items', async (req, res) => {
         res.status(500);
         res.render('500', {error: error});
       };
-      
     } else if(selectedDatabase == 'postgres'){
       if(DEBUG) console.log("POSTGRES");
       var searchWords = req.query.search;
@@ -67,7 +66,6 @@ router.get('/menu-items', async (req, res) => {
           console.log("Result: " + result);
           res.render('menuItemsStaff', {menuItems: result, selectedDatabase: selectedDatabase});
         }
-    
       } catch (error) {
         res.status(500);
         res.render('500', {error: error});
@@ -103,7 +101,6 @@ router.get('/menu-items', async (req, res) => {
         res.render('500', {error: error});
       };
     }
-    
 });
 
 router.get('/menu-items/:id', async (req, res) => {
@@ -181,7 +178,10 @@ router.post(`/menu-items`, async (req, res) => {
         res.status(500);
         res.render('500', {error: error});
       } 
-    }
+    } else {
+      var error = "Database was not selected"
+      res.render('500', {error: error});
+    } 
 });
 
 router.patch('/menu-items/:id/edit', async (req, res) => {
