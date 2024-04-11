@@ -5,8 +5,31 @@
     <body>
         <div class = "logout">
             <p>Do you want to sign out of your account?</p>
-            <a href="/" class="back-button">Logout</a>
+            <button class="back-button" id="logout">Logout</button>
         </div>
+        <script>
+            document.getElementById("logout").addEventListener("click", function(){
+                event.preventDefault(); // Prevent default action
+                // Send an asynchronous request to the server to clear the session
+                fetch('/management/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                }).then(response => {
+                    if(response.ok){
+                        window.location.href = "/";
+                    } else {
+                        console.error("Logout Failed")
+                    }
+                }).catch(error => {
+                    // Handle any errors
+                    console.error('Error during logout:', error);
+                });
+            });
+        </script>
+        
     </body>
     <%- include('./partials/footer.ejs') %>
 </html>

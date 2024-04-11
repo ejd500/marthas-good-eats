@@ -11,14 +11,14 @@ const methodOverride = require('method-override');
 app.use(methodOverride('_method'));
 const session = require('express-session');
 // Session middleware
-app.use(session({
-    secret: 'your_secret_key_here',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
-}));
+// app.use(session({
+//     secret: 'your_secret_key_here',
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: { secure: false }
+// }));
 
-const session = require('express-session');
+// const session = require('express-session');
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -41,11 +41,14 @@ function isAuthenticated(req, res, next) {
 
 function isStaff(req, res, next) {
   if (req.session && req.session.user && req.session.user.isStaff) {
-      // User is authenticated and is a staff member
-  next();
+    // User is authenticated and is a staff member
+    next();
+  } else if(req.session && req.session.user){
+    // User is authenticated and is NOT a staff memeber
+    next();
   } else {
-      // User is not a staff member
-      res.status(403).render('403'); 
+    // User is not a staff member or a user
+    res.status(403).render('403'); 
   }
 };
 
@@ -60,13 +63,13 @@ const managementRouter = require('./routes/management.js');
 app.use('/management', isAuthenticated, isStaff, managementRouter);
 
 const customerHomeRouter = require('./routes/customer/home.js');
-app.use('/home', customerHomeRouter);
+app.use('/home', isAuthenticated, isStaff, customerHomeRouter);
 
 const customerMenuItemsRouter = require('./routes/customer/menuItems.js');
-app.use('/menu-items', isAuthenticated, customerMenuItemsRouter);
+app.use('/menu-items', isAuthenticated, isStaff, customerMenuItemsRouter);
 
 const customerLogoutRouter = require('./routes/customer/logout.js');
-app.use('/logout', customerLogoutRouter);
+app.use('/logout', isAuthenticated, isStaff, customerLogoutRouter);
 
 const loginRouter = require('./routes/login');
 app.use('/login', loginRouter);

@@ -53,20 +53,18 @@ router.get('/menu-items', async (req, res) => {
       var searchWords = req.query.search;
       if (DEBUG) console.log("Search Words: " + searchWords);
       try {
-        var result = await pgFullTextDAL.getFullText(searchWords);
-        console.log("Result: " + result);
         if(searchWords == ''){
           let menuItems = await pgMenuItemsDAL.getMenuItems(); 
           res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
         } else {
-          var email = req.session.email;
-          if (DEBUG) console.log("Email: " + email);
-          var user = await pgLoginDAL.getLoginByEmail(email);
-          if (DEBUG) console.log(user);
-          var userID = user[0].user_id;
-          if (DEBUG) console.log("User ID: " + userID);
+          var user = req.session.user;
+          if (DEBUG) console.log("User: " + user);
+          var userID = user.user_id;
+          if(DEBUG) console.log("User ID: " + userID);
+         
           myEmitter.emit('searchLog', searchWords, userID, selectedDatabase);
-          
+          var result = await pgFullTextDAL.getFullText(searchWords);
+          console.log("Result: " + result);
           res.render('menuItemsStaff', {menuItems: result, selectedDatabase: selectedDatabase});
         }
     
@@ -75,25 +73,27 @@ router.get('/menu-items', async (req, res) => {
         res.render('500', {error: error});
       };
     } else if(selectedDatabase == 'mongo'){
-      if(DEBUG) console.log("MONGO")
-      var searchWords = req.query.search;
-      if(DEBUG) console.log(searchWords);
-      try {
-        if(searchWords == ''){
-          let menuItems = await mongoMenuItemsDAL.getMenuItems(); 
-          res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
-        } else {
-          var email = req.session.email;
-          var user = await pgLoginDAL.getLoginByEmail(email);
-          var userID = user[0].user_id;
-          myEmitter.emit('searchLog', searchWords, userID, selectedDatabase);
-          var result = await mongoFullTextDAL.getFullText(searchWords);
-          res.render('menuItemsStaff', {menuItems: result, selectedDatabase: selectedDatabase});
-        }
-      } catch (error) {
-        res.status(500);
-        res.render('500', {error: error});
-      };
+        if(DEBUG) console.log("MONGO")
+        var searchWords = req.query.search;
+        if(DEBUG) console.log("Search Words: " + searchWords);
+        try {
+          if(searchWords == ''){
+            let menuItems = await mongoMenuItemsDAL.getMenuItems(); 
+            res.render('menuItemsStaff', {menuItems:menuItems, selectedDatabase: selectedDatabase});
+          } else {
+            var user = req.session.user;
+            if (DEBUG) console.log("User: " + user);
+            var userID = user.user_id;
+            if(DEBUG) console.log("User ID: " + userID);
+          
+            myEmitter.emit('searchLog', searchWords, userID, selectedDatabase);
+            var result = await mongoFullTextDAL.getFullText(searchWords);
+            res.render('menuItemsStaff', {menuItems: result, selectedDatabase: selectedDatabase});
+          }
+        } catch (error) {
+          res.status(500);
+          res.render('500', {error: error});
+        };
     } else if(selectedDatabase == 'select'){
       if(DEBUG) console.log("SELECT")
       try {
@@ -233,6 +233,13 @@ router.delete('/menu-items/:id/delete', async (req, res) => {
 router.get('/logout', async (req, res) => {
     if(DEBUG) console.log('ROUTE: /management/logout');
     res.render('staffLogout.ejs');
+});
+
+router.post('/logout', async (req, res) => {
+  if(DEBUG) console.log("staffLogout.POST");
+  req.session.destroy();
+  res.status(200).send("Logout Successful");
+  if(DEBUG)console.log("Logout Successful");
 });
 
 module.exports = router;
