@@ -8,8 +8,16 @@
             <p>
                 <%=locals.error%>
             </p>
-            <a href="/registration" class="back-button">Try Again</a>
+            <a href="#" class="back-button" id="goBackLink">Try Again</a>
         </div>
+
+        <script>
+            document.getElementById("goBackLink").addEventListener("click", function(event) {
+                event.preventDefault(); // Prevent the default behavior of the link
+                history.back(); // Navigate back to the previous URL in the history stack
+            });
+        </script>
+        
     </body>
     <%- include('./partials/footer.ejs') %>
 </html>

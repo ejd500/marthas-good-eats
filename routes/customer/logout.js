@@ -8,4 +8,11 @@ router.get('/', async (req, res) => {
   res.render('customerLogout.ejs');
 });
 
+router.post('/', async (req, res) => {
+  if(DEBUG) console.log("customerLogout.POST");
+  req.session.destroy();
+  res.status(200).send("Logout Successful");
+  if(DEBUG)console.log("Logout Successful");
+});
+
 module.exports = router;

@@ -37,7 +37,6 @@ router.post('/', async (req, res) => {
 
         if(isStaff){
           res.redirect('/management');
-          
         } else {
           res.redirect('/home');
         }
