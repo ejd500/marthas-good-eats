@@ -10,7 +10,6 @@ async function getMenuItems() {
       const results = await cursor.toArray();
       return results;
     } catch(error) {
-      // this is where you write to the event log
       console.log(error);
     } finally {
       mongoDAL.close();
@@ -28,7 +27,6 @@ async function getMenuItemById(id) {
     return result[0];
   } catch(error) {
     console.error('Error occurred while fetching data from MongoDB:', error);
-    // throw error;
   } finally {
     mongoDAL.close();
   }
