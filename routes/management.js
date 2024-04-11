@@ -16,14 +16,14 @@ class MyEmitter extends EventEmitter {};
 // initialize a new emitter object
 const myEmitter = new EventEmitter();
 
-myEmitter.on("searchLog", (searchWords, userID, selectedDatabase)=>{
+myEmitter.on("staffSearchLog", (searchWords, userID, selectedDatabase)=>{
   const date = new Date;
   if(DEBUG) console.log(`User ID ${userID} searched ${selectedDatabase} for "${searchWords}" on ${date}`)
 
-  if(!fs.existsSync(path.join(__dirname, '..', 'logs'))){
-      fs.mkdirSync(path.join(__dirname, '..', 'logs'));
+  if(!fs.existsSync(path.join(__dirname, '..', 'staffLogs'))){
+      fs.mkdirSync(path.join(__dirname, '..', 'staffLogs'));
   }
-  fs.appendFile(path.join(__dirname, '..', 'logs', 'search.log'), `User ID ${userID} searched ${selectedDatabase} for "${searchWords}" on ${date}\n`, (error)=>{if(error) throw error})
+  fs.appendFile(path.join(__dirname, '..', 'staffLogs', 'staffSearch.log'), `User ID ${userID} searched ${selectedDatabase} for "${searchWords}" on ${date}\n`, (error)=>{if(error) throw error})
 
 })
 
@@ -61,7 +61,7 @@ router.get('/menu-items', async (req, res) => {
           var userID = user.user_id;
           if(DEBUG) console.log("User ID: " + userID);
          
-          myEmitter.emit('searchLog', searchWords, userID, selectedDatabase);
+          myEmitter.emit('staffSearchLog', searchWords, userID, selectedDatabase);
           var result = await pgFullTextDAL.getFullText(searchWords);
           console.log("Result: " + result);
           res.render('menuItemsStaff', {menuItems: result, selectedDatabase: selectedDatabase});
@@ -84,7 +84,7 @@ router.get('/menu-items', async (req, res) => {
             var userID = user.user_id;
             if(DEBUG) console.log("User ID: " + userID);
           
-            myEmitter.emit('searchLog', searchWords, userID, selectedDatabase);
+            myEmitter.emit('staffSearchLog', searchWords, userID, selectedDatabase);
             var result = await mongoFullTextDAL.getFullText(searchWords);
             res.render('menuItemsStaff', {menuItems: result, selectedDatabase: selectedDatabase});
           }
