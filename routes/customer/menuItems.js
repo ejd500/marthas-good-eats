@@ -4,8 +4,25 @@ const menuItemsDAL = require('../../services/pg.menuItems.dal');
 //const menuItemsDAL = require('../../services/m.menuItems.dal');
 const fullTextDAL = require('../../services/pg.fulltext.dal');
 //const fullTextDAL = require('../../services/m.fulltext.dal');
+const fs = require('fs');
+const path = require('path');
 
+// define/extend an EventEmitter class
+const EventEmitter = require('events');
+class MyEmitter extends EventEmitter {};
+// initialize a new emitter object
+const myEmitter = new EventEmitter();
 
+myEmitter.on("customerSearchLog", (searchWords, userID, category)=>{
+  const date = new Date;
+  if(DEBUG) console.log(`User ID ${userID} searched the ${category} menu for "${searchWords}" on ${date}`)
+
+  if(!fs.existsSync(path.join(__dirname, '../..', 'customerLogs'))){
+      fs.mkdirSync(path.join(__dirname, '../..', 'customerLogs'));
+  }
+  fs.appendFile(path.join(__dirname, '../..', 'customerLogs', 'customerSearch.log'), `User ID ${userID} searched ${category} menu for "${searchWords}" on ${date}\n`, (error)=>{if(error) throw error})
+
+})
 
 router.get('/', async (req, res) => {
     if (DEBUG) console.table('ROUTE: /menu-items (GET)');     
@@ -14,16 +31,27 @@ router.get('/', async (req, res) => {
         const searchText = req.query.search;
         if (searchText) {
             menuItems = await fullTextDAL.getFullText(searchText);
+            if(req.query.category != undefined){
+                var user = req.session.user;
+                var userID = user.user_id;
+                var category = req.query.category;
+                myEmitter.emit('customerSearchLog', searchText, userID, category);
+            } else {
+                var user = req.session.user;
+                var userID = user.user_id;
+                var category = "All";
+                myEmitter.emit('customerSearchLog', searchText, userID, category);
+            }
         } else {
             menuItems = await menuItemsDAL.getMenuItems(); 
         }
         
       // Filter by category if provided
-      const category = req.query.category;
-      if (DEBUG) console.log('Received category:', category);
+    var category = req.query.category;
+    if (DEBUG) console.log('Received category:', category);
       if (category && category !== 'All') {
           menuItems = menuItems.filter(item => item.category === category);
-      }
+        }
 
       // Group menu items by category
       const groupedMenuItems = menuItems.reduce((acc, item) => {
