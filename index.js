@@ -43,11 +43,8 @@ function isStaff(req, res, next) {
   if (req.session && req.session.user && req.session.user.isStaff) {
     // User is authenticated and is a staff member
     next();
-  } else if(req.session && req.session.user){
-    // User is authenticated and is NOT a staff memeber
-    next();
   } else {
-    // User is not a staff member or a user
+    // User is not a staff member
     res.status(403).render('403'); 
   }
 };
@@ -63,13 +60,13 @@ const managementRouter = require('./routes/management.js');
 app.use('/management', isAuthenticated, isStaff, managementRouter);
 
 const customerHomeRouter = require('./routes/customer/home.js');
-app.use('/home', isAuthenticated, isStaff, customerHomeRouter);
+app.use('/home', isAuthenticated, customerHomeRouter);
 
 const customerMenuItemsRouter = require('./routes/customer/menuItems.js');
-app.use('/menu-items', isAuthenticated, isStaff, customerMenuItemsRouter);
+app.use('/menu-items', isAuthenticated, customerMenuItemsRouter);
 
 const customerLogoutRouter = require('./routes/customer/logout.js');
-app.use('/logout', isAuthenticated, isStaff, customerLogoutRouter);
+app.use('/logout', isAuthenticated, customerLogoutRouter);
 
 const loginRouter = require('./routes/login');
 app.use('/login', loginRouter);
