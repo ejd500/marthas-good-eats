@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const menuItemsDAL = require('../../services/pg.menuItems.dal');
-const loginDAL = require('../../services/pg.login.dal');
+const { homeController} = require('../../controllers/homeController');
+;
 
-router.get('/', async (req, res) => {
-  if(DEBUG) console.log('ROUTE: /home');
-  res.render('customerHome.ejs');
-});
+router.get('/', homeController);
 
 module.exports = router;
