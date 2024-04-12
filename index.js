@@ -10,15 +10,7 @@ app.use(express.urlencoded({ extended: true, }));
 const methodOverride = require('method-override');
 app.use(methodOverride('_method'));
 const session = require('express-session');
-// Session middleware
-// app.use(session({
-//     secret: 'your_secret_key_here',
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: { secure: false }
-// }));
 
-// const session = require('express-session');
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
