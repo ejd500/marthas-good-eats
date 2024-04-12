@@ -1,3 +1,5 @@
+const {indexController} = require('./controllers/indexController.js')
+
 if( process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
@@ -41,9 +43,7 @@ function isStaff(req, res, next) {
   }
 };
 
-app.get('/', (req,res) =>{
-  res.render('index.ejs');
-});
+app.get('/', indexController);
 
 const registrationRouter = require('./routes/registration.js');
 app.use('/registration', registrationRouter);
@@ -64,6 +64,7 @@ const loginRouter = require('./routes/login');
 app.use('/login', loginRouter);
 
 const apiMenuItemsRouter = require('./routes/api/apiMenuItems');
+
 app.use('/api/menu-items', isAuthenticated,apiMenuItemsRouter);
 
 
@@ -75,4 +76,5 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
+module.exports = app;
 
