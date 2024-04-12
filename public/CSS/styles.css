@@ -49,7 +49,7 @@ nav ul li a:hover {
 }
 
 .about{
-    padding:96px;
+    padding:120px;
     text-align: center;
     font-family: "Playfair Display", serif;  
     line-height: 30px;
@@ -200,7 +200,7 @@ select{
 }
 
 .login-content{
-    margin: 60px;
+    margin: 80px;
     display:flex;
     flex-direction: column;
     align-items: center;
@@ -403,7 +403,7 @@ footer{
     margin: 60px;
 }
 .logout{
-    margin: 60px;
+    margin: 80px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -419,6 +419,54 @@ footer{
     margin: 60px;
     align-items: center;
 }
+
+.footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white; 
+    padding: 8px; 
+}
+
+.socialmedia {
+    margin-bottom: 16px; 
+}
+
+.socialmedia a {
+    margin-right: 16px;
+    color: white; 
+    font-size: 24px; 
+    text-decoration: none;
+    transition: opacity 0.2s; 
+}
+
+.socialmedia a:hover {
+    opacity: 0.8; 
+    color: #ecbd11;
+}
+
+.socialmedia a:last-child {
+    margin-right: 0; 
+}
+
+hr {
+    width: 50%; 
+    border: none;
+    border-bottom: 1px solid white; 
+    margin-bottom: 16px; 
+}
+
+.address p {
+    margin: 6px;
+    text-align: center;
+}
+
+.address{
+    margin-bottom: 8px;
+}
+
+
+
 
 
 
