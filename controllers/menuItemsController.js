@@ -3,10 +3,23 @@ DEBUG = true;
 const fullTextDAL = require('../services/pg.fulltext.dal');
 const menuItemsDAL = require('../services/pg.menuItems.dal');
 
+const fs = require('fs');
+const path = require('path');
+
 const EventEmitter = require('events');
 class MyEmitter extends EventEmitter {};
 const myEmitter = new EventEmitter();
 
+myEmitter.on("customerSearchLog", (searchWords, userID, category)=>{
+    const date = new Date;
+    if(DEBUG) console.log(`User ID ${userID} searched the ${category} menu for "${searchWords}" on ${date}`)
+  
+    if(!fs.existsSync(path.join(__dirname, '..', 'customerLogs'))){
+        fs.mkdirSync(path.join(__dirname, '..', 'customerLogs'));
+    }
+    fs.appendFile(path.join(__dirname, '..', 'customerLogs', 'customerSearch.log'), `User ID ${userID} searched ${category} menu for "${searchWords}" on ${date}\n`, (error)=>{if(error) throw error})
+  
+  })
 
 async function menuItemsController (req, res) {
     if (DEBUG) console.table('ROUTE: /menu-items (GET)');     

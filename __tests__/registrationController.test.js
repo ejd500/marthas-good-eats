@@ -15,7 +15,7 @@ const mockResponse = () => {
 const mockUser = {
     first_name: 'Corina',
     last_name: 'Jewer',
-    email: 'corina@email..com',
+    email: 'corina@email.com',
     password: 'password',
     isStaff: true,
 };
